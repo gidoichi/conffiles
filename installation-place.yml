@@ -1,0 +1,7 @@
+place:
+- target: keepassxc.ini
+  cond:
+  - when: '[ -n "${WSL_DISTRO_NAME}" ]'
+    path: /mnt/c/Program Files/KeePassXC/
+  - when: '[ $(uname) = Darwin ]'
+    path: $HOME/Library/Application Support/KeePassXC/

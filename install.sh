@@ -7,18 +7,21 @@ p() {
 }
 
 # EXAMPLE
-# stdin(json-array): [{}]
-set_object_in_array_if_not_exists() {
+# stdin json-array: [{"target":"in"},{"path":"p"}]
+# $1 string: target
+# $2 string: new
+# output json-array: [{"target":"in"},{"path":"p","target":"new"}]
+set_object_in_array_if_not_exists() (
     key="$1"
     val="$2"
-    p "${arr}" | jq -c '.[]' | while IFS= read -r sub; do
+    cat | jq -c '.[]' | while IFS= read -r sub; do
         p "${sub}" | jq --arg k "${key}" --arg v "${val}" 'if .[$k] then . else . += {($k):$v} end'
     done | jq -cs 'flatten(1)'
-}
+)
 
 # EXAMPLE
-# $1(json-object): {"target":"t1.txt", "path":"/path/to/p1", "when":"[ 1 -eq 1 ]"}
-# stdout(json-array): [{"target":"t1.txt", "path":"/path/to/p1"}]
+# $1 json-object: {"target":"t1.txt", "path":"/path/to/p1", "when":"[ 1 -eq 1 ]"}
+# stdout json-array: [{"target":"t1.txt", "path":"/path/to/p1"}]
 collect() (
     json="$1"
 

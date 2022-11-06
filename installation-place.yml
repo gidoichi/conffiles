@@ -3,5 +3,7 @@ place:
   cond:
   - when: '[ -n "${WSL_DISTRO_NAME}" ]'
     path: '$(wslpath "$(printf %s "${APPDATA}")")/KeePassXC/'
-  - when: '[ $(uname) = Darwin ]'
-    path: '$HOME/Library/Application Support/KeePassXC/'
+  - when: '[ "$(uname)" = Darwin ]'
+    path: '${HOME}/Library/Application Support/KeePassXC/'
+  - when: '[ "$(uname)" = Linux ]'
+    path: '${HOME}/.config/keepassxc/'

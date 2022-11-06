@@ -1,9 +1,28 @@
 #!/bin/sh
 
-set -eu
+set -u
 
 p() {
     printf '%s' "$*"
+}
+
+debug() {
+    (set -x; : "$@")
+    "$@"
+}
+
+ln_if_not_create() {
+    src="$1"
+    dst="$2"
+    if [ -L "${dst}" ]; then
+        inode_src="$(ls -di "${src}" | cut -d ' ' -f 1)"
+        inode_dst="$(ls -di "$(readlink "${dst}")" 2>/dev/null | cut -d ' ' -f 1)"
+        if [ "${inode_src}" -eq "${inode_dst}" ] 2>/dev/null; then
+            return
+        fi
+    fi
+
+    debug ln -s "${src}" "${dst}"
 }
 
 # EXAMPLE
@@ -37,7 +56,7 @@ collect() (
     fi
 
     if when=$(p "${json}" | jq -er '.when'); then
-        sh -uc "${when}" || return
+        sh -uc "${when}" >/dev/null 2>&1 || return
     fi
 
     if target=$(p "${json}" | jq -er '.target'); then
@@ -69,6 +88,5 @@ list=$(list "$(yq -o json "${conf}" | jq -c '.')")
 p "${list}" | jq -c '.[]' | while IFS= read -r line; do
     path=$(p "${line}" | jq -r '.path')
     target=$(p "${line}" | jq -r '.target')
-    # TODO: link file
-    echo cp "${PARENT}/configs/${target}" "${path}${target}"
+    ln_if_not_create "${PARENT}/configs/${target}" "${path}${target}"
 done

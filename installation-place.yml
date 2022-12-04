@@ -7,3 +7,7 @@ place:
     path: '${HOME}/Library/Application Support/KeePassXC/'
   - when: '[ "$(uname)" = Linux ]'
     path: '${HOME}/.config/keepassxc/'
+- target: terminology/config
+  cond:
+  - when: '[ "$(uname)" = Linux ]'
+    path: '${HOME}/.config/'

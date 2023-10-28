@@ -2,16 +2,18 @@ place:
 - target: keepassxc.ini
   cond:
   - when: '[ -n "${WSL_DISTRO_NAME}" ]'
-    path: $(wslpath "$(powershell.exe -Command '$env:APPDATA' | sed 's/\r$//')")/KeePassXC/
+    path: $(wslpath "$(powershell.exe -Command '$env:APPDATA' | sed 's/\r$//')")/KeePassXC/keepassxc.ini
+    command: 'cp -i "${target}" "${path}"'
   - when: '[ "$(uname)" = Darwin ]'
-    path: '${HOME}/Library/Application Support/KeePassXC/'
+    path: '${HOME}/Library/Application Support/KeePassXC/keepassxc.ini'
   - when: '[ "$(uname)" = Linux ]'
-    path: '${HOME}/.config/keepassxc/'
+    path: '${HOME}/.config/keepassxc/keepassxc.ini'
 - target: terminology/config
   cond:
   - when: '[ "$(uname)" = Linux ] && [ -z "${WSL_DISTRO_NAME}" ]'
-    path: '${HOME}/.config/'
+    path: '${HOME}/.config/terminology/config'
 - target: PowerShell/profile.ps1
   cond:
   - when: '[ -n "${WSL_DISTRO_NAME}" ]'
-    path: '${HOME}/Documents/'
+    path: '${HOME}/Documents/PowerShell/profile.ps1'
+    command: 'cp -i "${target}" "${path}"'

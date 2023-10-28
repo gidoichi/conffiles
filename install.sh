@@ -22,7 +22,13 @@ ln_if_not_create() {
         fi
     fi
 
-    debug ln -s "${src}" "${dst}"
+    if [ -n "$command" ]; then
+        target="$src"
+        path="$dst"
+        eval "debug $command" </dev/tty
+    else
+        debug ln -is "${src}" "${dst}" </dev/tty
+    fi
 }
 
 # EXAMPLE
@@ -59,6 +65,9 @@ collect() (
         sh -uc "${when}" >/dev/null 2>&1 || return
     fi
 
+    if command=$(p "${json}" | jq -er '.command'); then
+        arr=$(p "${arr}" | set_object_in_array_if_not_exists 'command' "${command}")
+    fi
     if target=$(p "${json}" | jq -er '.target'); then
         arr=$(p "${arr}" | set_object_in_array_if_not_exists 'target' "${target}")
     fi
@@ -88,5 +97,6 @@ list=$(list "$(yq -o json "${conf}" | jq -c '.')")
 p "${list}" | jq -c '.[]' | while IFS= read -r line; do
     path=$(p "${line}" | jq -r '.path')
     target=$(p "${line}" | jq -r '.target')
-    ln_if_not_create "${PARENT}/configs/${target}" "${path}${target}"
+    command=$(p "${line}" | jq -r '.command // empty')
+    ln_if_not_create "${PARENT}/configs/${target}" "${path}"
 done

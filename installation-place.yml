@@ -17,3 +17,6 @@ place:
   - when: '[ -n "${WSL_DISTRO_NAME}" ]'
     path: '${HOME}/Documents/PowerShell/profile.ps1'
     command: 'cp -i "${target}" "${path}"'
+  # - when: 'On PowerShell'
+  #   path: '$PROFILE.CurrentUserAllHosts'
+  #   command: 'New-Item -Value $target -Path $path -ItemType HardLink'

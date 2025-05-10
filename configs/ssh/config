@@ -1,0 +1,4 @@
+ControlMaster auto
+ControlPath ~/.ssh/mux-%r@%h:%p
+ControlPersist 300
+StrictHostKeyChecking=accept-new

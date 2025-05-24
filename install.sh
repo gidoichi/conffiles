@@ -1,6 +1,6 @@
 #!/bin/sh
 
-set -u
+set -eu
 
 p() {
     printf '%s' "$*"
@@ -89,6 +89,9 @@ list() (
 
     # TODO: detect invalid config
 )
+
+jq --help >/dev/null
+yq --help >/dev/null
 
 PARENT="$(d=${0%/*}/; [ "_$d" = "_$0/" ] && d='./'; cd "$d"; pwd)"
 conf="${PARENT}/installation-place.yml"

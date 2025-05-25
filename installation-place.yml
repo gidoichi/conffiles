@@ -3,7 +3,7 @@ place:
   cond:
   - when: '[ -n "${WSL_DISTRO_NAME}" ]'
     path: $(wslpath "$(powershell.exe -Command Write-Host '$env:APPDATA')")/KeePassXC/keepassxc.ini
-    command: 'cp -i "${target}" "${path}"'
+    command: 'cp -i "${target}" "${path}" || true'
   - when: '[ "$(uname)" = Darwin ]'
     path: '${HOME}/Library/Application Support/KeePassXC/keepassxc.ini'
   - when: '[ "$(uname)" = Linux ]'
@@ -18,7 +18,7 @@ place:
   cond:
   - when: '[ -n "${WSL_DISTRO_NAME}" ]'
     path: '${HOME}/Documents/PowerShell/profile.ps1'
-    command: 'cp -i "${target}" "${path}"'
+    command: 'cp -i "${target}" "${path}" || true'
   # - when: 'On PowerShell'
   #   path: '$PROFILE.CurrentUserAllHosts'
   #   command: 'New-Item -Value $target -Path $path -ItemType HardLink'

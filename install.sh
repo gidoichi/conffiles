@@ -22,7 +22,7 @@ ln_if_not_create() {
         fi
     fi
 
-    mkdir "${dst%/*}"
+    mkdir -p "${dst%/*}"
     if [ -n "$command" ]; then
         target="$src"
         path="$dst"
